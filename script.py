@@ -1,8 +1,8 @@
 # Лабораторна №3 варіант 2
 from sys import exit
 
-MATRIX_HEIGHT = 12
-MATRIX_WIDTH = 12
+MATRIX_HEIGHT = 8
+MATRIX_WIDTH = 8
 SYMBOL = [["x", ".", "x"], [".", "x", "."], ["x", ".", "x"]]
 SYMBOL_HEIGHT = len(SYMBOL[0])
 SYMBOL_WIDTH = len(SYMBOL)
@@ -80,12 +80,16 @@ def ask_y():
         return ask_y()
 
 
-# Main code
-matrix = []
+def create_matrix():
+    matrix = []
+    for i in range(MATRIX_WIDTH):
+        col = (". " * MATRIX_HEIGHT).strip().split(" ")
+        matrix.append(col)
+    return matrix
 
-for i in range(MATRIX_WIDTH):
-    col = (". " * MATRIX_HEIGHT).strip().split(" ")
-    matrix.append(col)
+# Main code
+matrix = create_matrix()
+
 
 x = ask_x()
 print(f"x = {x}")
@@ -97,3 +101,31 @@ insert_symbol(matrix, SYMBOL, x, y)
 
 print("\n", " Result:")
 print(matrix_to_string(matrix))
+
+prev_matrix = matrix
+while True:
+    move = input("Where to move?: ").strip()
+
+    new_matrix = create_matrix()
+    if move == "w" and y != 0: 
+        insert_symbol(new_matrix, SYMBOL, x, y - 1)
+        y -= 1
+    elif move == "s" and y + SYMBOL_HEIGHT != MATRIX_HEIGHT:
+        insert_symbol(new_matrix, SYMBOL, x, y + 1)
+        y += 1
+    elif move == "a" and x != 0:
+        insert_symbol(new_matrix, SYMBOL, x - 1, y)
+        x -= 1
+    elif move == "d" and x + SYMBOL_WIDTH != MATRIX_WIDTH:
+        print(x, MATRIX_WIDTH, SYMBOL_WIDTH)
+        insert_symbol(new_matrix, SYMBOL, x + 1, y)
+        x += 1
+    elif move == "exit()":
+        exit("Script stopped")
+    else:
+        print(matrix_to_string(prev_matrix))
+        print("Invalid value")
+        continue
+    prev_matrix = new_matrix
+    
+    print(matrix_to_string(new_matrix))
